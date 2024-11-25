@@ -1,51 +1,54 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const app = express();
 const PORT = 3005;
-const paysDonnes = require('./pays.json').pays;
+const paysDonnes = require("./pays.json").pays;
 
 //consome les donnees au format JSON
 app.use(express.json());
 //permet le cross-origin
 app.use(cors());
 
-
 //Retourne tous les pays
-app.get('/pays', (req,res) => {
-    res.json(paysDonnes);
+app.get("/pays", (req, res) => {
+  res.json(paysDonnes);
 });
 
 //Retourne les langues officielles par continent
-app.get('/langues', (req,res) => {
+app.get("/langues", (req, res) => {
+  const { continent } = req.query;
 
-    const { continent } = req.body;
+  const continentsValides = [
+    "Afrique",
+    "Amérique du Nord",
+    "Amérique du Sud",
+    "Asie",
+    "Europe",
+    "Océanie",
+  ];
 
-    const continentsValides = [
-        "Afrique",
-        "Amérique du Nord",
-        "Amérique du Sud",
-        "Asie",
-        "Europe",
-        "Océanie"
-    ];
+  if (!continent || !continentsValides.includes(continentLowerCase)) {
+    return res.status(400).json({ error: "Continent invalide ou manquant." });
+  }
 
-    if (!continentsValides.includes(continent)) {
-        return res.status(400).json({ erreur: "Continent invalide. Veuillez choisir parmi : " + continentsValides.join(', ') });
-    }
+  const continentLowerCase = continent.toLowerCase();
 
-    // Filtrer les langues officielles des pays du continent demandé
-    //J'utilise un set pour ne pas avoir de doublons
-    const languesSet = new Set(); 
-    paysDonnes
-        .filter(pays => pays.continent === continent)
-        .forEach(pays => pays.langues_officielles.forEach(langue => languesSet.add(langue)));
+  const languesSet = new Set(); //j'utilise set pour eviter doublons
 
-    //Retourne langues en forme d'array
-    res.json({ continent, langues_officielles: Array.from(languesSet) });
+  paysDonnes
+    .filter(
+      (pays) => pays.continent.toLowerCase() === continentLowerCase
+    )
+    .forEach((pays) =>
+      pays.langues_officielles.forEach((langue) => languesSet.add(langue))
+    );
+
+  res.json({
+    continent: continentLowerCase,
+    langues_officielles: Array.from(languesSet),
+  });
 });
 
-
-//Demarer le serveur
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port http://localhost:${PORT}`);
+  console.log(`Serveur démarré sur le port http://localhost:${PORT}`);
 });
