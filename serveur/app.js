@@ -27,11 +27,10 @@ app.get("/langues", (req, res) => {
     "Océanie",
   ];
 
-  if (!continent || !continentsValides.includes(continentLowerCase)) {
-    return res.status(400).json({ error: "Continent invalide ou manquant." });
-  }
+  
 
   const continentLowerCase = continent.toLowerCase();
+
 
   const languesSet = new Set(); //j'utilise set pour eviter doublons
 
