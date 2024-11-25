@@ -9,6 +9,7 @@ const ListePays = ({ pays = []}) => {
         <Accordion.Item eventKey={index} key={index}>
           <Accordion.Header>{pays.nom}</Accordion.Header>
           <Accordion.Body>
+            <div><strong>Continent :</strong> {pays.continent}</div>
             <div><strong>Capitale :</strong> {pays.capitale}</div>
             <div>
               <strong>Population :</strong> {pays.population.toLocaleString()}
@@ -16,6 +17,7 @@ const ListePays = ({ pays = []}) => {
             <div>
               <strong>Langues officielles :</strong> {pays.langues_officielles.join(", ")}
             </div>
+            <div><strong>Date de creation :</strong> {pays.date_creation}</div>
             <div>
               <strong>Drapeau :</strong>{" "}
               <a href={pays.drapeau} target="_blank" rel="noopener noreferrer">
